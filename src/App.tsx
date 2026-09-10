@@ -229,15 +229,18 @@ export default function App() {
           </button>
         </div>
 
-        {menuOpen && (
-          <div className="md:hidden border-t px-6 py-4 flex flex-col gap-4" style={{ borderColor: "var(--nav-border)", backgroundColor: "var(--nav-bg)" }}>
-            {(["inicio", "equipo", "proyectos", "links"] as Section[]).map((s) => (
-              <button key={s} onClick={() => nav(s)} className={`nav-link text-left ${active === s ? "active" : ""}`}>
-                {s === "inicio" ? "Inicio" : s === "equipo" ? "Nuestro Equipo" : s === "proyectos" ? "Proyectos" : "Links"}
-              </button>
-            ))}
-          </div>
-        )}
+       {menuOpen && (
+  <div
+    className="md:hidden fixed inset-0 top-16 px-6 py-8 flex flex-col gap-6"
+    style={{ backgroundColor: "var(--bg)" }}
+  >
+    {(["inicio", "equipo", "proyectos", "links"] as Section[]).map((s) => (
+      <button key={s} onClick={() => nav(s)} className={`nav-link text-left text-lg ${active === s ? "active" : ""}`}>
+        {s === "inicio" ? "Inicio" : s === "equipo" ? "Nuestro Equipo" : s === "proyectos" ? "Proyectos" : "Links"}
+      </button>
+    ))}
+  </div>
+)}
       </header>
 
       <main>
