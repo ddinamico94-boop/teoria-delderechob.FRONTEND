@@ -246,18 +246,26 @@ export default function App() {
           <div>
             {/* Hero */}
             <section className="relative overflow-hidden">
-              {/* Foto de fondo — TEST: opacidad al máximo para verificar que carga */}
-              <div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  backgroundImage: `url(${facultadImg})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  filter: "blur(6px)",
-                  transform: "scale(1.08)",
-                  opacity: 1,
-                }}
-              />
+              {/* Foto de fondo — visible del lado derecho, tapada por el fondo del lado izquierdo */}
+<div
+  className="absolute inset-0 pointer-events-none"
+  style={{
+    backgroundImage: `url(${facultadImg})`,
+    backgroundSize: "cover",
+    backgroundPosition: "right center",
+  }}
+/>
+{/* Degradado: sólido donde va el texto, transparente hacia la derecha */}
+<div
+  className="absolute inset-0 pointer-events-none"
+  style={{
+    background: "linear-gradient(90deg, var(--bg) 0%, var(--bg) 45%, transparent 85%)",
+  }}
+/>
+<div
+  className="absolute inset-0 pointer-events-none"
+  style={{ background: "radial-gradient(ellipse at 70% 40%, rgba(0,212,212,0.12) 0%, transparent 55%), radial-gradient(ellipse at 20% 70%, rgba(255,45,155,0.12) 0%, transparent 55%)" }}
+/>
               {/* Capa para mantener el contraste del texto — TEST: apagada */}
               <div
                 className="absolute inset-0 pointer-events-none"
