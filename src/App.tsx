@@ -123,26 +123,6 @@ const IconArrow = ({ size = 16, color = "currentColor" }) => (
   </svg>
 );
 
-const IconSun = ({ size = 18 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="5" />
-    <line x1="12" y1="1" x2="12" y2="3" />
-    <line x1="12" y1="21" x2="12" y2="23" />
-    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-    <line x1="1" y1="12" x2="3" y2="12" />
-    <line x1="21" y1="12" x2="23" y2="12" />
-    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-  </svg>
-);
-
-const IconMoon = ({ size = 18 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-  </svg>
-);
-
 // ── Mapeo de íconos que vienen del backend como string ──────────────────────
 
 const ICON_MAP: Record<string, (props: { size?: number; color?: string }) => JSX.Element> = {
@@ -178,7 +158,6 @@ type ContentData = {
 export default function App() {
   const [active, setActive] = useState<Section>("inicio");
   const [menuOpen, setMenuOpen] = useState(false);
-  const [lightMode, setLightMode] = useState(false);
   const [content, setContent] = useState<ContentData | null>(null);
   const [loadError, setLoadError] = useState(false);
 
@@ -210,34 +189,23 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-full mesh-bg${lightMode ? " light-mode" : ""}`}>
+    <div className="min-h-full mesh-bg">
       {/* NAV */}
       <header
         className="sticky top-0 z-50 border-b"
         style={{ borderColor: "var(--nav-border)", backgroundColor: "var(--nav-bg)", backdropFilter: "blur(16px)" }}
       >
         <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
-          {/* Left: logo + title + theme toggle */}
-          <div className="flex items-center gap-3">
-            <button onClick={() => nav("inicio")} className="flex items-center gap-3">
-              <img src={logoImg} alt="Logo Comisión 4" className="w-10 h-10 rounded-full object-cover" />
-              <span className="font-display text-lg tracking-widest hidden sm:block" style={{ color: "var(--cyan)" }}>
+          {/* Left: logo + title */}
+          <div className="flex items-center gap-3 min-w-0">
+            <button onClick={() => nav("inicio")} className="flex items-center gap-3 min-w-0">
+              <img src={logoImg} alt="Logo Comisión 4" className="w-10 h-10 rounded-full object-cover shrink-0" />
+              <span
+                className="font-display tracking-widest truncate"
+                style={{ color: "var(--cyan)", fontSize: "clamp(0.65rem, 2.4vw, 1.125rem)" }}
+              >
                 TEORÍA DEL DERECHO Y LA JUSTICIA B
               </span>
-            </button>
-
-            {/* Theme toggle */}
-            <button
-              onClick={() => setLightMode(!lightMode)}
-              className="flex items-center justify-center w-8 h-8 rounded-full transition-all"
-              style={{
-                backgroundColor: lightMode ? "rgba(255,45,155,0.12)" : "rgba(0,212,212,0.12)",
-                border: lightMode ? "1px solid rgba(255,45,155,0.35)" : "1px solid rgba(0,212,212,0.35)",
-                color: lightMode ? "var(--magenta)" : "var(--cyan)",
-              }}
-              aria-label={lightMode ? "Cambiar a modo oscuro" : "Cambiar a modo claro"}
-            >
-              {lightMode ? <IconSun size={15} /> : <IconMoon size={15} />}
             </button>
           </div>
 
@@ -250,7 +218,7 @@ export default function App() {
           </nav>
 
           <button
-            className="md:hidden flex flex-col gap-1.5 p-2"
+            className="md:hidden flex flex-col gap-1.5 p-2 shrink-0"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Abrir menú"
           >
@@ -294,11 +262,8 @@ export default function App() {
                     <span className="gradient-text">DERECHO</span><br />
                     Y LA JUSTICIA
                   </h1>
-                  <p className="text-base md:text-lg mb-2 font-semibold" style={{ color: "var(--magenta)" }}>
-                    Comisión 4 — Turno "B"
-                  </p>
-                  <p className="mb-8 leading-relaxed" style={{ color: "var(--text-secondary)", maxWidth: "440px" }}>
-                    Exploramos los fundamentos filosóficos, epistemológicos y axiológicos del fenómeno jurídico. Un espacio de pensamiento crítico sobre el derecho, la norma y la justicia.
+                  <p className="text-base md:text-lg mb-8 font-semibold" style={{ color: "var(--magenta)" }}>
+                    Comisión 4
                   </p>
                   <div className="flex flex-wrap gap-4">
                     <button className="btn-primary" onClick={() => nav("equipo")}>
