@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import logoImg from "@/imports/WhatsApp_Image_2026-08-26_at_23.21.12.jpeg";
 
 type Section = "inicio" | "equipo" | "proyectos" | "links";
@@ -130,71 +130,6 @@ const IconArrow = ({ size = 16, color = "currentColor" }) => (
   </svg>
 );
 
-// ── Data ──────────────────────────────────────────────────────────────────
-
-const docentesCuerpo = [
-  { name: "Dr. Fabricio Falcucci", role: "Profesor Adjunto Int." },
-  { name: "Dra. Margarita Vázquez", role: "Auxiliar Docente Regular" },
-  { name: "Dr. Evaristo Ulivarri", role: "Auxiliar Graduado" },
-];
-
-const auxiliaresEstudiantiles = [
-  "Cristian Sebastián",
-  "Facundo Sánchez",
-  "Ignacio Sosa",
-  "Leonel López Hyrycz",
-  "Felipe Cano",
-  "Joaquín Flores Arias",
-  "Guadalupe Farías",
-  "Lourdes Chávez",
-];
-
-const links = [
-  { label: "Aula Virtual — SIU Guaraní", url: "#", desc: "Sistema de gestión académica de la facultad", Icon: IconGraduate },
-  { label: "Biblioteca Digital Jurídica", url: "#", desc: "Acceso a recursos bibliográficos y revistas especializadas", Icon: IconBook },
-  { label: "Programa de la Materia 2026", url: "#", desc: "Contenidos mínimos, bibliografía y cronograma de cursado", Icon: IconDoc },
-  { label: "Plataforma Moodle", url: "#", desc: "Materiales de estudio, foros y entregas de trabajos", Icon: IconMonitor },
-  { label: "Canal de YouTube — Clases Grabadas", url: "#", desc: "Registro audiovisual de las clases teóricas", Icon: IconPlay },
-  { label: "Grupo de WhatsApp", url: "#", desc: "Canal oficial de comunicación de la comisión", Icon: IconMessage },
-  { label: "Reglamento Académico", url: "#", desc: "Normativa vigente de la facultad", Icon: IconClipboard },
-  { label: "Contacto Docente", url: "#", desc: "Mail institucional para consultas académicas", Icon: IconMail },
-];
-
-const timelineSteps = [
-  {
-    Icon: IconBulb,
-    title: "Origen en la Cátedra",
-    color: "cyan" as const,
-    text: 'La iniciativa surgió como un trabajo de profundización temática enfocado en el análisis de los "Nuevos Sujetos de Derecho" en el marco de la asignatura Teoría del Derecho y la Justicia "B".',
-  },
-  {
-    Icon: IconLeaf,
-    title: "Trabajo de Campo e Interdisciplina (El Manantial)",
-    color: "magenta" as const,
-    text: "El equipo realizó un abordaje de campo territorial e interdisciplinario en la sede de El Manantial, articulando conocimientos prácticos junto a docentes y estudiantes de la Facultad de Agronomía, Zootecnia y Veterinaria (FAZYV-UNT).",
-  },
-  {
-    Icon: IconBuilding,
-    title: "Gestión e Intercambio Institucional",
-    color: "cyan" as const,
-    text: "Con las conclusiones y diagnósticos recabados en el territorio, el equipo mantuvo reuniones institucionales con las autoridades académicas para fundamentar la necesidad de incorporar este nuevo paradigma jurídico no antropocéntrico a la oferta académica de grado.",
-  },
-  {
-    Icon: IconClipboard,
-    title: "Tratamiento y Aprobación en el HCD",
-    color: "magenta" as const,
-    text: "Elevado bajo el Expediente EXP-DER-ME-2945/2024, el proyecto obtuvo dictamen favorable de la Comisión de Enseñanza el 3 de julio de 2024. El Honorable Consejo Directivo aprobó la creación de la asignatura en Sesión Ordinaria el 24 de julio de 2024 mediante la Resolución RES-DER-CD-11448/2024.",
-    badge: "RES-DER-CD-11448/2024",
-  },
-  {
-    Icon: IconGraduate,
-    title: "Puesta en Vigencia",
-    color: "cyan" as const,
-    text: "La materia comenzó a dictarse por extensión docente a partir del primer semestre del Ciclo Lectivo 2025.",
-    badge: "Desde 2025",
-  },
-];
-
 const IconSun = ({ size = 18 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="5" />
@@ -215,12 +150,66 @@ const IconMoon = ({ size = 18 }: { size?: number }) => (
   </svg>
 );
 
+// ── Mapeo de íconos que vienen del backend como string ──────────────────────
+
+const ICON_MAP: Record<string, (props: { size?: number; color?: string }) => JSX.Element> = {
+  graduado: IconGraduate,
+  book: IconBook,
+  doc: IconDoc,
+  monitor: IconMonitor,
+  play: IconPlay,
+  message: IconMessage,
+  clipboard: IconClipboard,
+  mail: IconMail,
+  bulb: IconBulb,
+  leaf: IconLeaf,
+  building: IconBuilding,
+};
+
+type ContentData = {
+  docentes: { id: string; name: string; role: string }[];
+  auxiliares: { id: string; name: string }[];
+  links: { id: string; label: string; url: string; desc: string; icon: string }[];
+  timeline: {
+    id: string;
+    title: string;
+    text: string;
+    badge?: string;
+    color: "cyan" | "magenta";
+    icon: string;
+  }[];
+};
+
 // ── Component ─────────────────────────────────────────────────────────────
 
 export default function App() {
   const [active, setActive] = useState<Section>("inicio");
   const [menuOpen, setMenuOpen] = useState(false);
   const [lightMode, setLightMode] = useState(false);
+  const [content, setContent] = useState<ContentData | null>(null);
+  const [loadError, setLoadError] = useState(false);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/api/content`)
+      .then((r) => {
+        if (!r.ok) throw new Error("Respuesta no OK");
+        return r.json();
+      })
+      .then(setContent)
+      .catch(() => setLoadError(true));
+  }, []);
+
+  // Datos que vienen del backend, con fallback vacío mientras carga o si falla
+  const docentesCuerpo = content?.docentes ?? [];
+  const auxiliaresEstudiantiles = (content?.auxiliares ?? []).map((a) => a.name);
+  const links = (content?.links ?? []).map((l) => ({
+    ...l,
+    Icon: ICON_MAP[l.icon] ?? IconDoc,
+  }));
+  const timelineSteps = (content?.timeline ?? []).map((t) => ({
+    ...t,
+    Icon: ICON_MAP[t.icon] ?? IconBulb,
+  }));
 
   const nav = (section: Section) => {
     setActive(section);
@@ -307,7 +296,7 @@ export default function App() {
                   >
                     Facultad de Derecho
                   </div>
-                  <h1 className="section-title mb-4" style={{ color: "#fff" }}>
+                  <h1 className="section-title mb-4" style={{ color: "var(--text-primary)" }}>
                     TEORÍA DEL<br />
                     <span className="gradient-text">DERECHO</span><br />
                     Y LA JUSTICIA
@@ -379,7 +368,7 @@ export default function App() {
                     </div>
                     <h2
                       className="font-display text-3xl md:text-4xl leading-tight mb-4"
-                      style={{ color: "#fff", letterSpacing: "0.03em" }}
+                      style={{ color: "var(--text-primary)", letterSpacing: "0.03em" }}
                     >
                       ¡BIENVENIDOS A LA<br />
                       <span className="gradient-text">COMISIÓN 4</span><br />
@@ -427,7 +416,7 @@ export default function App() {
                   <div
                     key={c.title}
                     className="card-hover rounded-lg p-6"
-                    style={{ backgroundColor: "rgba(22,22,31,0.7)", border: "1px solid rgba(0,212,212,0.12)" }}
+                    style={{ backgroundColor: "var(--bg-card)", border: "1px solid rgba(0,212,212,0.12)" }}
                   >
                     <div className="mb-4" style={{ color: "var(--cyan)" }}>
                       <c.Icon size={28} color="var(--cyan)" />
@@ -449,6 +438,12 @@ export default function App() {
               <h2 className="section-title gradient-text">Nuestro Equipo</h2>
             </div>
 
+            {loadError && (
+              <p className="mb-8 text-sm" style={{ color: "var(--magenta)" }}>
+                No se pudo cargar el equipo desde el servidor. Mostrando lo disponible.
+              </p>
+            )}
+
             {/* Cuerpo Docente */}
             <div className="mb-10">
               <div className="flex items-center gap-3 mb-6">
@@ -459,7 +454,7 @@ export default function App() {
               <div className="grid sm:grid-cols-3 gap-5">
                 {docentesCuerpo.map((d) => (
                   <div
-                    key={d.name}
+                    key={d.id}
                     className="card-hover rounded-xl p-6 text-center"
                     style={{ backgroundColor: "var(--bg-card)", border: "1px solid rgba(0,212,212,0.2)" }}
                   >
@@ -521,7 +516,7 @@ export default function App() {
               <div className="relative">
                 <div className="flex items-center gap-3 mb-6">
                   <IconHandshake size={28} color="var(--magenta)" />
-                  <h3 className="font-display text-2xl md:text-3xl tracking-wide" style={{ color: "#fff" }}>
+                  <h3 className="font-display text-2xl md:text-3xl tracking-wide" style={{ color: "var(--text-primary)" }}>
                     NUESTRO <span className="gradient-text">COMPROMISO</span>
                   </h3>
                 </div>
@@ -537,7 +532,7 @@ export default function App() {
 
                 <div
                   className="inline-block px-6 py-3 rounded-lg font-semibold text-sm"
-                  style={{ background: "linear-gradient(135deg, rgba(0,212,212,0.15), rgba(255,45,155,0.15))", border: "1px solid rgba(255,255,255,0.1)", color: "#fff" }}
+                  style={{ background: "linear-gradient(135deg, rgba(0,212,212,0.15), rgba(255,45,155,0.15))", border: "1px solid rgba(0,0,0,0.08)", color: "var(--text-primary)" }}
                 >
                   ¡Les deseamos un excelente trayecto académico!
                 </div>
@@ -574,7 +569,7 @@ export default function App() {
                     >
                       Asignatura Optativa — Plan 2018
                     </span>
-                    <h3 className="font-display text-2xl md:text-3xl tracking-wide" style={{ color: "#fff" }}>
+                    <h3 className="font-display text-2xl md:text-3xl tracking-wide" style={{ color: "var(--text-primary)" }}>
                       Derecho de los Animales<br className="hidden sm:block" /> No Humanos
                     </h3>
                     <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
@@ -602,7 +597,7 @@ export default function App() {
 
                   <div className="space-y-6">
                     {timelineSteps.map((step) => (
-                      <div key={step.title} className="sm:pl-14 relative flex flex-col sm:flex-row gap-4 sm:gap-0">
+                      <div key={step.id} className="sm:pl-14 relative flex flex-col sm:flex-row gap-4 sm:gap-0">
                         <div
                           className="hidden sm:flex absolute left-0 w-10 h-10 rounded-full items-center justify-center shrink-0"
                           style={{
@@ -665,7 +660,7 @@ export default function App() {
             <div className="grid sm:grid-cols-2 gap-4">
               {links.map((link, i) => (
                 <a
-                  key={link.label}
+                  key={link.id}
                   href={link.url}
                   className="card-hover flex items-start gap-4 p-5 rounded-lg group"
                   style={{
@@ -703,7 +698,7 @@ export default function App() {
 
       <footer
         className="mt-auto border-t py-8 text-center"
-        style={{ borderColor: "rgba(255,45,155,0.15)", backgroundColor: "rgba(10,10,15,0.8)" }}
+        style={{ borderColor: "rgba(255,45,155,0.15)", backgroundColor: "var(--bg-surface)" }}
       >
         <p className="font-display tracking-widest text-sm" style={{ color: "var(--text-muted)" }}>
           COMISIÓN 4 — TEORÍA DEL DERECHO Y LA JUSTICIA "B" — 2026
