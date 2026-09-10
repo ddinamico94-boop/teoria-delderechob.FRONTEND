@@ -14,13 +14,6 @@ const IconScale = ({ size = 24, color = "currentColor" }) => (
   </svg>
 );
 
-const IconSearch = ({ size = 24, color = "currentColor" }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="11" cy="11" r="7" />
-    <line x1="16.5" y1="16.5" x2="22" y2="22" />
-  </svg>
-);
-
 const IconBook = ({ size = 24, color = "currentColor" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
@@ -229,7 +222,7 @@ export default function App() {
             <button onClick={() => nav("inicio")} className="flex items-center gap-3">
               <img src={logoImg} alt="Logo Comisión 4" className="w-10 h-10 rounded-full object-cover" />
               <span className="font-display text-lg tracking-widest hidden sm:block" style={{ color: "var(--cyan)" }}>
-                COMISIÓN 4
+                TEORÍA DEL DERECHO Y LA JUSTICIA B
               </span>
             </button>
 
@@ -322,36 +315,6 @@ export default function App() {
                     </button>
                   </div>
                 </div>
-
-                <div className="flex justify-center">
-                  <div
-                    className="gradient-border rounded-full p-1 shadow-2xl"
-                    style={{ boxShadow: "0 0 60px rgba(0,212,212,0.2), 0 0 100px rgba(255,45,155,0.1)" }}
-                  >
-                    <img
-                      src={logoImg}
-                      alt="Logo Comisión 4 — Teoría del Derecho y la Justicia B"
-                      className="w-56 h-56 md:w-72 md:h-72 rounded-full object-cover"
-                    />
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* Stats strip */}
-            <section style={{ borderTop: "1px solid var(--strip-border)", borderBottom: "1px solid var(--strip-border)", backgroundColor: "var(--strip-bg)" }}>
-              <div className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                {[
-                  { value: "2026", label: "Ciclo lectivo" },
-                  { value: "11", label: "Integrantes" },
-                  { value: "1", label: "Proyecto institucional" },
-                  { value: "4ª", label: "Comisión" },
-                ].map((s) => (
-                  <div key={s.label}>
-                    <div className="font-display text-4xl md:text-5xl gradient-text">{s.value}</div>
-                    <div className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>{s.label}</div>
-                  </div>
-                ))}
               </div>
             </section>
 
@@ -405,28 +368,6 @@ export default function App() {
               </div>
             </section>
 
-            {/* Feature cards */}
-            <section className="max-w-6xl mx-auto px-6 pb-20">
-              <div className="grid md:grid-cols-3 gap-6">
-                {[
-                  { Icon: IconScale, title: "Teoría General", text: "Estudiamos los conceptos fundamentales del derecho: norma, ordenamiento, validez, eficacia y justicia desde una perspectiva crítica." },
-                  { Icon: IconSearch, title: "Epistemología Jurídica", text: "Analizamos el conocimiento jurídico, sus métodos y presupuestos filosóficos desde las grandes corrientes del pensamiento occidental." },
-                  { Icon: IconBook, title: "Hermenéutica", text: "Profundizamos en la interpretación y argumentación jurídica, con especial atención a la práctica judicial contemporánea." },
-                ].map((c) => (
-                  <div
-                    key={c.title}
-                    className="card-hover rounded-lg p-6"
-                    style={{ backgroundColor: "var(--bg-card)", border: "1px solid rgba(0,212,212,0.12)" }}
-                  >
-                    <div className="mb-4" style={{ color: "var(--cyan)" }}>
-                      <c.Icon size={28} color="var(--cyan)" />
-                    </div>
-                    <h3 className="font-semibold text-base mb-2" style={{ color: "var(--cyan)" }}>{c.title}</h3>
-                    <p style={{ color: "var(--text-muted)", lineHeight: 1.75, fontSize: "0.875rem" }}>{c.text}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
           </div>
         )}
 
