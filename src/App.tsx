@@ -262,20 +262,19 @@ export default function App() {
   }}
 />
 
-{/* Foto de fondo — Mobile: sólida arriba (título), se abre hacia abajo */}
+{/* Foto de fondo — Mobile: textura sutil pareja, sin recortes raros */}
 <div
   className="md:hidden absolute inset-0 pointer-events-none"
   style={{
     backgroundImage: `url(${facultadImg})`,
     backgroundSize: "cover",
-    backgroundPosition: "center 25%",
+    backgroundPosition: "center 20%",
+    opacity: 0.28,
   }}
 />
 <div
   className="md:hidden absolute inset-0 pointer-events-none"
-  style={{
-    background: "linear-gradient(180deg, var(--bg) 0%, var(--bg) 60%, transparent 95%)",
-  }}
+  style={{ backgroundColor: "var(--bg)", opacity: 0.55 }}
 />
 <div
   className="absolute inset-0 pointer-events-none"
