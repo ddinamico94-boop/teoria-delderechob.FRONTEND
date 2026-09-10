@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import logoImg from "@/imports/WhatsApp_Image_2026-08-26_at_23.21.12.jpeg";
+import facultadImg from "@/imports/facultad.jpg";
 
 type Section = "inicio" | "equipo" | "proyectos" | "links";
 
@@ -245,11 +246,28 @@ export default function App() {
           <div>
             {/* Hero */}
             <section className="relative overflow-hidden">
+              {/* Foto de fondo difuminada */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  backgroundImage: `url(${facultadImg})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  filter: "blur(6px)",
+                  transform: "scale(1.08)",
+                  opacity: 0.35,
+                }}
+              />
+              {/* Capa oscura para mantener el contraste del texto */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{ backgroundColor: "var(--bg-page, #0a0e14)", opacity: 0.55 }}
+              />
               <div
                 className="absolute inset-0 pointer-events-none"
                 style={{ background: "radial-gradient(ellipse at 70% 40%, rgba(0,212,212,0.12) 0%, transparent 55%), radial-gradient(ellipse at 20% 70%, rgba(255,45,155,0.12) 0%, transparent 55%)" }}
               />
-              <div className="max-w-6xl mx-auto px-6 py-24 md:py-36 grid md:grid-cols-2 gap-16 items-center">
+              <div className="max-w-6xl mx-auto px-6 py-24 md:py-36 grid md:grid-cols-2 gap-16 items-center relative">
                 <div>
                   <div
                     className="inline-block mb-4 px-3 py-1 rounded text-xs font-semibold tracking-widest uppercase"
