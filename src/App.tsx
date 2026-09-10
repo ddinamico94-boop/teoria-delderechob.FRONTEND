@@ -246,7 +246,7 @@ export default function App() {
           <div>
             {/* Hero */}
             <section className="relative overflow-hidden">
-              {/* Foto de fondo difuminada */}
+              {/* Foto de fondo — TEST: opacidad al máximo para verificar que carga */}
               <div
                 className="absolute inset-0 pointer-events-none"
                 style={{
@@ -255,13 +255,13 @@ export default function App() {
                   backgroundPosition: "center",
                   filter: "blur(6px)",
                   transform: "scale(1.08)",
-                  opacity: 0.35,
+                  opacity: 1,
                 }}
               />
-              {/* Capa oscura para mantener el contraste del texto */}
+              {/* Capa para mantener el contraste del texto — TEST: apagada */}
               <div
                 className="absolute inset-0 pointer-events-none"
-                style={{ backgroundColor: "var(--bg)", opacity: 0.55 }}
+                style={{ backgroundColor: "var(--bg)", opacity: 0 }}
               />
               <div
                 className="absolute inset-0 pointer-events-none"
