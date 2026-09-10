@@ -261,7 +261,7 @@ export default function App() {
               {/* Capa oscura para mantener el contraste del texto */}
               <div
                 className="absolute inset-0 pointer-events-none"
-                style={{ backgroundColor: "var(--bg-page, #0a0e14)", opacity: 0.55 }}
+                style={{ backgroundColor: "var(--bg)", opacity: 0.55 }}
               />
               <div
                 className="absolute inset-0 pointer-events-none"
