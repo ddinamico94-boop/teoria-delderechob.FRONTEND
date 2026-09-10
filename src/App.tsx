@@ -246,20 +246,35 @@ export default function App() {
           <div>
             {/* Hero */}
             <section className="relative overflow-hidden">
-              {/* Foto de fondo — visible del lado derecho, tapada por el fondo del lado izquierdo */}
+              {/* Foto de fondo — Desktop: visible a la derecha */}
 <div
-  className="absolute inset-0 pointer-events-none"
+  className="hidden md:block absolute inset-0 pointer-events-none"
   style={{
     backgroundImage: `url(${facultadImg})`,
     backgroundSize: "cover",
     backgroundPosition: "right center",
   }}
 />
-{/* Degradado: sólido donde va el texto, transparente hacia la derecha */}
 <div
-  className="absolute inset-0 pointer-events-none"
+  className="hidden md:block absolute inset-0 pointer-events-none"
   style={{
     background: "linear-gradient(90deg, var(--bg) 0%, var(--bg) 45%, transparent 85%)",
+  }}
+/>
+
+{/* Foto de fondo — Mobile: sólida arriba (título), se abre hacia abajo */}
+<div
+  className="md:hidden absolute inset-0 pointer-events-none"
+  style={{
+    backgroundImage: `url(${facultadImg})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center 25%",
+  }}
+/>
+<div
+  className="md:hidden absolute inset-0 pointer-events-none"
+  style={{
+    background: "linear-gradient(180deg, var(--bg) 0%, var(--bg) 60%, transparent 95%)",
   }}
 />
 <div
