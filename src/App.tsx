@@ -211,7 +211,7 @@ export default function App() {
   className="font-display tracking-widest md:hidden"
   style={{ color: "var(--cyan)", fontSize: "1.15rem" }}
 >
-  COMISIÓN 4
+  TEORIA DEL DERECHO Y LA JUSTICIA B
 </span>
             </button>
           </div>
