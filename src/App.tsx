@@ -202,11 +202,17 @@ export default function App() {
             <button onClick={() => nav("inicio")} className="flex items-center gap-3 min-w-0">
               <img src={logoImg} alt="Logo Comisión 4" className="w-10 h-10 rounded-full object-cover shrink-0" />
               <span
-                className="font-display tracking-widest truncate"
-                style={{ color: "var(--cyan)", fontSize: "clamp(0.65rem, 2.4vw, 1.125rem)" }}
-              >
-                TEORÍA DEL DERECHO Y LA JUSTICIA B
-              </span>
+  className="font-display tracking-widest hidden md:block"
+  style={{ color: "var(--cyan)", fontSize: "1.125rem" }}
+>
+  TEORÍA DEL DERECHO Y LA JUSTICIA B
+</span>
+<span
+  className="font-display tracking-widest md:hidden"
+  style={{ color: "var(--cyan)", fontSize: "1.15rem" }}
+>
+  COMISIÓN 4
+</span>
             </button>
           </div>
 
