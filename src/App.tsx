@@ -196,22 +196,22 @@ export default function App() {
         className="sticky top-0 z-50 border-b"
         style={{ borderColor: "var(--nav-border)", backgroundColor: "var(--nav-bg)", backdropFilter: "blur(16px)" }}
       >
-        <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
+       <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-16 overflow-hidden">
           {/* Left: logo + title */}
           <div className="flex items-center gap-3 min-w-0">
             <button onClick={() => nav("inicio")} className="flex items-center gap-3 min-w-0">
               <img src={logoImg} alt="Logo Comisión 4" className="w-10 h-10 rounded-full object-cover shrink-0" />
               <span
-  className="font-display tracking-widest hidden md:block"
-  style={{ color: "var(--cyan)", fontSize: "1.125rem" }}
->
+  className="font-display tracking-widest hidden md:block whitespace-nowrap"
+  style={{ color: "var(--cyan)", fontSize: "1.125rem" }}>
+
   TEORÍA DEL DERECHO Y LA JUSTICIA B
 </span>
 <span
-  className="font-display tracking-widest md:hidden"
-  style={{ color: "var(--cyan)", fontSize: "1.15rem" }}
+  className="font-display tracking-widest md:hidden whitespace-nowrap"
+  style={{ color: "var(--cyan)", fontSize: "1.25rem" }}
 >
-  TEORIA DEL DERECHO Y LA JUSTICIA B
+  COMISIÓN 4
 </span>
             </button>
           </div>
