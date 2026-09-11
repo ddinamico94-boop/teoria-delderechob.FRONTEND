@@ -234,20 +234,24 @@ export default function App() {
             <span className="block w-4 h-0.5" style={{ backgroundColor: "var(--cyan)" }} />
           </button>
         </div>
-
-      {menuOpen && (
-  <div
-    className="md:hidden fixed inset-0 px-6 flex flex-col gap-6"
-    style={{ backgroundColor: "var(--bg)", zIndex: 100, paddingTop: "5rem" }}
-  >
-    {(["inicio", "equipo", "proyectos", "links"] as Section[]).map((s) => (
-      <button key={s} onClick={() => nav(s)} className={`nav-link text-left text-lg ${active === s ? "active" : ""}`}>
-        {s === "inicio" ? "Inicio" : s === "equipo" ? "Nuestro Equipo" : s === "proyectos" ? "Proyectos" : "Links"}
-      </button>
-    ))}
-  </div>
-)}
       </header>
+
+      {/* Menú móvil — FUERA del <header> a propósito: el header tiene backdropFilter (blur),
+          y eso convierte a cualquier elemento "fixed" anidado adentro en relativo al header
+          (no a la pantalla), haciendo que se vea semitransparente y mezclado con el contenido
+          de atrás. Al vivir afuera, el fondo queda sólido y cubre toda la pantalla. */}
+      {menuOpen && (
+        <div
+          className="md:hidden fixed inset-0 px-6 flex flex-col gap-6"
+          style={{ backgroundColor: "var(--bg)", opacity: 1, zIndex: 100, paddingTop: "5rem" }}
+        >
+          {(["inicio", "equipo", "proyectos", "links"] as Section[]).map((s) => (
+            <button key={s} onClick={() => nav(s)} className={`nav-link text-left text-lg ${active === s ? "active" : ""}`}>
+              {s === "inicio" ? "Inicio" : s === "equipo" ? "Nuestro Equipo" : s === "proyectos" ? "Proyectos" : "Links"}
+            </button>
+          ))}
+        </div>
+      )}
 
       <main>
         {/* ── INICIO ── */}
