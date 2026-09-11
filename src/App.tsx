@@ -211,7 +211,7 @@ export default function App() {
   className="font-display tracking-widest md:hidden whitespace-nowrap"
   style={{ color: "var(--cyan)", fontSize: "1.125rem" }}
 >
-  Teoria del derecho B
+  APRENDIENDO DERECHO
 </span>
             </button>
           </div>
@@ -235,10 +235,10 @@ export default function App() {
           </button>
         </div>
 
-       {menuOpen && (
+      {menuOpen && (
   <div
-    className="md:hidden fixed inset-0 top-16 px-6 py-8 flex flex-col gap-6"
-    style={{ backgroundColor: "var(--bg)" }}
+    className="md:hidden fixed inset-0 px-6 flex flex-col gap-6"
+    style={{ backgroundColor: "var(--bg)", zIndex: 100, paddingTop: "5rem" }}
   >
     {(["inicio", "equipo", "proyectos", "links"] as Section[]).map((s) => (
       <button key={s} onClick={() => nav(s)} className={`nav-link text-left text-lg ${active === s ? "active" : ""}`}>
