@@ -209,7 +209,7 @@ export default function App() {
 </span>
 <span
   className="font-display tracking-widest md:hidden whitespace-nowrap"
-  style={{ color: "var(--cyan)", fontSize: "1.25rem" }}
+  style={{ color: "var(--cyan)", fontSize: "1.125rem" }}
 >
   Teoria del Derecho y la Justicia B
 </span>
