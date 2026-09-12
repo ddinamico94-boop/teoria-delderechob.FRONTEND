@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import logoImg from "@/imports/WhatsApp_Image_2026-08-26_at_23.21.12.jpeg";
 import facultadImg from "@/imports/facultad.jpg";
 
@@ -197,8 +197,28 @@ export default function App() {
   const [loadError, setLoadError] = useState(false);
 
   const heroScroll = useScrollProgress("hero-section");
-  const heroTranslateY = 60 * (1 - heroScroll) - heroScroll * 80;
-  const heroOpacity = Math.min(heroScroll * 2.5 + 1, 1);
+
+  // Divide el título en líneas y cada línea en letras, con un desplazamiento
+  // y rotación "aleatorios" (pero fijos) por letra. Al scrollear, cada letra
+  // se separa y desvanece; al subir, vuelve a su lugar y se rearma.
+  const heroLines = useMemo(() => {
+    const lines = [
+      { text: "TEORÍA DEL", gradient: false },
+      { text: "DERECHO", gradient: true },
+      { text: "Y LA JUSTICIA", gradient: false },
+    ];
+    let i = 0;
+    return lines.map((line) => ({
+      gradient: line.gradient,
+      chars: line.text.split("").map((ch) => {
+        const idx = i++;
+        const dx = ((idx * 37) % 21) - 10; // desplazamiento horizontal
+        const dy = ((idx * 53) % 27) - 13; // desplazamiento vertical
+        const rot = ((idx * 17) % 61) - 30; // rotación en grados
+        return { ch, dx, dy, rot, key: idx };
+      }),
+    }));
+  }, []);
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/api/content`)
@@ -348,19 +368,27 @@ export default function App() {
                   >
                     Facultad de Derecho
                   </div>
-                  <h1
-                    className="section-title mb-4"
-                    style={{
-                      color: "var(--text-primary)",
-                      transform: `translateY(${heroTranslateY}px)`,
-                      opacity: heroOpacity,
-                      transition: "transform 0.05s linear, opacity 0.05s linear",
-                      willChange: "transform, opacity",
-                    }}
-                  >
-                    TEORÍA DEL<br />
-                    <span className="gradient-text">DERECHO</span><br />
-                    Y LA JUSTICIA
+                  <h1 className="section-title mb-4" style={{ color: "var(--text-primary)" }}>
+                    {heroLines.map((line, li) => (
+                      <div key={li} style={{ display: "block" }}>
+                        {line.chars.map(({ ch, dx, dy, rot, key }) => (
+                          <span
+                            key={key}
+                            className={line.gradient ? "gradient-text" : undefined}
+                            style={{
+                              display: "inline-block",
+                              whiteSpace: ch === " " ? "pre" : undefined,
+                              opacity: 1 - heroScroll,
+                              transform: `translate(${dx * heroScroll}px, ${dy * heroScroll}px) rotate(${rot * heroScroll}deg)`,
+                              transition: "transform 0.05s linear, opacity 0.05s linear",
+                              willChange: "transform, opacity",
+                            }}
+                          >
+                            {ch === " " ? "\u00A0" : ch}
+                          </span>
+                        ))}
+                      </div>
+                    ))}
                   </h1>
                   <p className="text-base md:text-lg mb-8 font-semibold" style={{ color: "var(--magenta)" }}>
                     Comisión 4
