@@ -205,7 +205,7 @@ export default function App() {
   className="font-display tracking-widest hidden md:block whitespace-nowrap"
   style={{ color: "var(--cyan)", fontSize: "1.125rem" }}>
 
-  TEORÍA DEL DERECHO Y LA JUSTICIA B
+  APRENDIENDO DERECHO
 </span>
 <span
   className="font-display tracking-widest md:hidden whitespace-nowrap"
