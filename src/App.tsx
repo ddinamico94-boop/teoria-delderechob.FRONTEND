@@ -271,6 +271,13 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/api/content`)
       .then((r) => {
         if (!r.ok) throw new Error("Respuesta no OK");
@@ -295,6 +302,7 @@ export default function App() {
   const nav = (section: Section) => {
     setActive(section);
     setMenuOpen(false);
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   };
 
   return (
