@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import logoImg from "@/imports/WhatsApp_Image_2026-08-26_at_23.21.12.jpeg";
 import facultadImg from "@/imports/facultad.jpg";
 
@@ -123,6 +123,56 @@ const IconArrow = ({ size = 16, color = "currentColor" }) => (
     <polyline points="12 5 19 12 12 19" />
   </svg>
 );
+
+// ── Reveal: hace que un bloque "corra" hacia su lugar cuando entra en pantalla ──
+
+function Reveal({
+  children,
+  direction = "up",
+  delay = 0,
+}: {
+  children: React.ReactNode;
+  direction?: "up" | "left" | "right";
+  delay?: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.unobserve(el);
+        }
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -60px 0px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const hiddenOffset =
+    direction === "left" ? "translateX(-70px)" : direction === "right" ? "translateX(70px)" : "translateY(50px)";
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        transform: visible ? "translate(0, 0)" : hiddenOffset,
+        opacity: visible ? 1 : 0,
+        transition: `transform 0.8s cubic-bezier(0.16,1,0.3,1) ${delay}s, opacity 0.8s ease ${delay}s`,
+        willChange: "transform, opacity",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
 
 // ── Mapeo de íconos que vienen del backend como string ──────────────────────
 
@@ -413,6 +463,7 @@ export default function App() {
 
             {/* Welcome message */}
             <section className="max-w-6xl mx-auto px-6 py-20">
+              <Reveal>
               <div
                 className="gradient-border rounded-2xl p-8 md:p-12"
                 style={{ backgroundColor: "var(--bg-card)" }}
@@ -459,6 +510,7 @@ export default function App() {
                   </div>
                 </div>
               </div>
+              </Reveal>
             </section>
 
           </div>
@@ -486,9 +538,9 @@ export default function App() {
                 <div className="h-px flex-1" style={{ background: "linear-gradient(90deg, transparent, rgba(0,212,212,0.5))" }} />
               </div>
               <div className="grid sm:grid-cols-3 gap-5">
-                {docentesCuerpo.map((d) => (
+                {docentesCuerpo.map((d, idx) => (
+                  <Reveal key={d.id} delay={idx * 0.08}>
                   <div
-                    key={d.id}
                     className="card-hover rounded-xl p-6 text-center"
                     style={{ backgroundColor: "var(--bg-card)", border: "1px solid rgba(0,212,212,0.2)" }}
                   >
@@ -505,6 +557,7 @@ export default function App() {
                     <h3 className="font-semibold text-base mb-1">{d.name}</h3>
                     <p className="text-xs font-medium uppercase tracking-wide" style={{ color: "var(--cyan)" }}>{d.role}</p>
                   </div>
+                  </Reveal>
                 ))}
               </div>
             </div>
@@ -517,9 +570,9 @@ export default function App() {
                 <div className="h-px flex-1" style={{ background: "linear-gradient(90deg, transparent, rgba(255,45,155,0.5))" }} />
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {auxiliaresEstudiantiles.map((name) => (
+                {auxiliaresEstudiantiles.map((name, idx) => (
+                  <Reveal key={name} direction={idx % 2 === 0 ? "left" : "right"} delay={idx * 0.06}>
                   <div
-                    key={name}
                     className="card-hover rounded-lg px-4 py-4 flex items-center gap-3"
                     style={{ backgroundColor: "var(--bg-card)", border: "1px solid rgba(255,45,155,0.15)" }}
                   >
@@ -535,11 +588,13 @@ export default function App() {
                     </div>
                     <span className="text-sm font-medium leading-tight" style={{ color: "var(--text-primary)" }}>{name}</span>
                   </div>
+                  </Reveal>
                 ))}
               </div>
             </div>
 
             {/* Nuestro Compromiso */}
+            <Reveal>
             <div
               className="rounded-2xl p-8 md:p-10 relative overflow-hidden"
               style={{ backgroundColor: "var(--bg-card)", border: "1px solid rgba(255,45,155,0.2)" }}
@@ -572,6 +627,7 @@ export default function App() {
                 </div>
               </div>
             </div>
+            </Reveal>
           </section>
         )}
 
@@ -583,6 +639,7 @@ export default function App() {
               <h2 className="section-title gradient-text">Proyectos</h2>
             </div>
 
+            <Reveal>
             <div
               className="rounded-2xl overflow-hidden mb-10"
               style={{ backgroundColor: "var(--bg-card)", border: "1px solid rgba(0,212,212,0.25)" }}
@@ -630,8 +687,9 @@ export default function App() {
                   />
 
                   <div className="space-y-6">
-                    {timelineSteps.map((step) => (
-                      <div key={step.id} className="sm:pl-14 relative flex flex-col sm:flex-row gap-4 sm:gap-0">
+                    {timelineSteps.map((step, idx) => (
+                      <Reveal key={step.id} direction={idx % 2 === 0 ? "left" : "right"}>
+                      <div className="sm:pl-14 relative flex flex-col sm:flex-row gap-4 sm:gap-0">
                         <div
                           className="hidden sm:flex absolute left-0 w-10 h-10 rounded-full items-center justify-center shrink-0"
                           style={{
@@ -672,11 +730,13 @@ export default function App() {
                           <p className="text-sm" style={{ color: "var(--text-secondary)", lineHeight: 1.8 }}>{step.text}</p>
                         </div>
                       </div>
+                      </Reveal>
                     ))}
                   </div>
                 </div>
               </div>
             </div>
+            </Reveal>
           </section>
         )}
 
@@ -693,8 +753,8 @@ export default function App() {
 
             <div className="grid sm:grid-cols-2 gap-4">
               {links.map((link, i) => (
+                <Reveal key={link.id} direction={i % 2 === 0 ? "left" : "right"} delay={(i % 4) * 0.05}>
                 <a
-                  key={link.id}
                   href={link.url}
                   className="card-hover flex items-start gap-4 p-5 rounded-lg group"
                   style={{
@@ -724,6 +784,7 @@ export default function App() {
                     <IconArrow size={15} color={i % 2 === 0 ? "var(--cyan)" : "var(--magenta)"} />
                   </div>
                 </a>
+                </Reveal>
               ))}
             </div>
           </section>
