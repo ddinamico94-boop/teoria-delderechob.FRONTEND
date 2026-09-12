@@ -154,6 +154,40 @@ type ContentData = {
   }[];
 };
 
+// ── Hook: progreso de scroll dentro de una sección ─────────────────────────
+
+function useScrollProgress(sectionId: string) {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+
+    let ticking = false;
+
+    const compute = () => {
+      const rect = section.getBoundingClientRect();
+      const height = section.offsetHeight;
+      const p = Math.min(Math.max(-rect.top / height, 0), 1);
+      setProgress(p);
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(compute);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    compute();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [sectionId]);
+
+  return progress;
+}
+
 // ── Component ─────────────────────────────────────────────────────────────
 
 export default function App() {
@@ -161,6 +195,10 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [content, setContent] = useState<ContentData | null>(null);
   const [loadError, setLoadError] = useState(false);
+
+  const heroScroll = useScrollProgress("hero-section");
+  const heroTranslateY = 60 * (1 - heroScroll) - heroScroll * 80;
+  const heroOpacity = Math.min(heroScroll * 2.5 + 1, 1);
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/api/content`)
@@ -258,7 +296,7 @@ export default function App() {
         {active === "inicio" && (
           <div>
             {/* Hero */}
-            <section className="relative overflow-hidden">
+            <section id="hero-section" className="relative overflow-hidden">
               {/* Foto de fondo — Desktop: visible a la derecha */}
 <div
   className="hidden md:block absolute inset-0 pointer-events-none"
@@ -310,7 +348,16 @@ export default function App() {
                   >
                     Facultad de Derecho
                   </div>
-                  <h1 className="section-title mb-4" style={{ color: "var(--text-primary)" }}>
+                  <h1
+                    className="section-title mb-4"
+                    style={{
+                      color: "var(--text-primary)",
+                      transform: `translateY(${heroTranslateY}px)`,
+                      opacity: heroOpacity,
+                      transition: "transform 0.05s linear, opacity 0.05s linear",
+                      willChange: "transform, opacity",
+                    }}
+                  >
                     TEORÍA DEL<br />
                     <span className="gradient-text">DERECHO</span><br />
                     Y LA JUSTICIA
