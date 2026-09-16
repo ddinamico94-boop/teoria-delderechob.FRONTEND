@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import logoImg from "@/imports/WhatsApp_Image_2026-08-26_at_23.21.12.jpeg";
 import facultadImg from "@/imports/facultad.jpg";
 
-type Section = "inicio" | "equipo" | "proyectos" | "links";
+type Section = "inicio" | "equipo" | "proyectos" | "links" | "parciales";
 
 // ── SVG Icons ──────────────────────────────────────────────────────────────
 
@@ -131,6 +131,15 @@ const IconArrow = ({ size = 16, color = "currentColor" }) => (
   </svg>
 );
 
+const IconCalendar = ({ size = 24, color = "currentColor" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2" />
+    <line x1="16" y1="2" x2="16" y2="6" />
+    <line x1="8" y1="2" x2="8" y2="6" />
+    <line x1="3" y1="10" x2="21" y2="10" />
+  </svg>
+);
+
 // ── Reveal: hace que un bloque "corra" hacia su lugar cuando entra en pantalla ──
 
 function Reveal({
@@ -213,6 +222,7 @@ type ContentData = {
     color: "cyan" | "magenta";
     icon: string;
   }[];
+  parciales: { id: string; title: string; date: string }[];
 };
 
 // ── Hook: progreso de scroll dentro de una sección ─────────────────────────
@@ -309,12 +319,26 @@ export default function App() {
     ...t,
     Icon: ICON_MAP[t.icon] ?? IconBulb,
   }));
+  const parciales = [...(content?.parciales ?? [])].sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
 
   const nav = (section: Section) => {
     setActive(section);
     setMenuOpen(false);
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   };
+
+  const sectionLabel = (s: Section) =>
+    s === "inicio"
+      ? "Inicio"
+      : s === "equipo"
+      ? "Nuestro Equipo"
+      : s === "proyectos"
+      ? "Proyectos"
+      : s === "parciales"
+      ? "Parciales"
+      : "Links";
 
   return (
     <div className="min-h-full mesh-bg">
@@ -344,9 +368,9 @@ export default function App() {
           </div>
 
           <nav className="hidden md:flex items-center gap-8">
-            {(["inicio", "equipo", "proyectos", "links"] as Section[]).map((s) => (
+            {(["inicio", "equipo", "proyectos", "parciales", "links"] as Section[]).map((s) => (
               <button key={s} onClick={() => nav(s)} className={`nav-link ${active === s ? "active" : ""}`}>
-                {s === "inicio" ? "Inicio" : s === "equipo" ? "Nuestro Equipo" : s === "proyectos" ? "Proyectos" : "Links"}
+                {sectionLabel(s)}
               </button>
             ))}
           </nav>
@@ -372,9 +396,9 @@ export default function App() {
           className="md:hidden fixed inset-0 px-6 flex flex-col gap-6"
           style={{ backgroundColor: "var(--bg)", opacity: 1, zIndex: 100, paddingTop: "5rem" }}
         >
-          {(["inicio", "equipo", "proyectos", "links"] as Section[]).map((s) => (
+          {(["inicio", "equipo", "proyectos", "parciales", "links"] as Section[]).map((s) => (
             <button key={s} onClick={() => nav(s)} className={`nav-link text-left text-lg ${active === s ? "active" : ""}`}>
-              {s === "inicio" ? "Inicio" : s === "equipo" ? "Nuestro Equipo" : s === "proyectos" ? "Proyectos" : "Links"}
+              {sectionLabel(s)}
             </button>
           ))}
         </div>
@@ -756,6 +780,88 @@ export default function App() {
               </div>
             </div>
             </Reveal>
+          </section>
+        )}
+
+        {/* ── PARCIALES ── */}
+        {active === "parciales" && (
+          <section className="max-w-5xl mx-auto px-6 py-20">
+            <div className="mb-14">
+              <p className="text-xs uppercase tracking-widest mb-2" style={{ color: "var(--cyan)" }}>Fechas importantes</p>
+              <h2 className="section-title gradient-text">Calendario de Parciales</h2>
+              <p className="mt-4 max-w-xl" style={{ color: "var(--text-muted)", lineHeight: 1.8 }}>
+                Fechas de los parciales de la comisión, ordenadas cronológicamente.
+              </p>
+            </div>
+
+            {parciales.length === 0 ? (
+              <p style={{ color: "var(--text-muted)" }}>
+                Todavía no hay parciales cargados.
+              </p>
+            ) : (
+              <div className="relative">
+                <div
+                  className="absolute left-5 top-2 bottom-2 w-px hidden sm:block"
+                  style={{ background: "linear-gradient(180deg, var(--cyan), var(--magenta))" }}
+                />
+                <div className="space-y-5">
+                  {parciales.map((p, idx) => {
+                    const color = idx % 2 === 0 ? "cyan" : "magenta";
+                    const parsedDate = new Date(p.date);
+                    const dateLabel = isNaN(parsedDate.getTime())
+                      ? p.date
+                      : parsedDate.toLocaleDateString("es-AR", {
+                          weekday: "long",
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                          timeZone: "UTC",
+                        });
+                    return (
+                      <Reveal key={p.id} direction={idx % 2 === 0 ? "left" : "right"} delay={(idx % 4) * 0.05}>
+                        <div className="sm:pl-14 relative flex flex-col sm:flex-row gap-4 sm:gap-0">
+                          <div
+                            className="hidden sm:flex absolute left-0 w-10 h-10 rounded-full items-center justify-center shrink-0"
+                            style={{
+                              backgroundColor: color === "cyan" ? "rgba(0,212,212,0.15)" : "rgba(255,45,155,0.15)",
+                              border: `1.5px solid ${color === "cyan" ? "rgba(0,212,212,0.5)" : "rgba(255,45,155,0.5)"}`,
+                              zIndex: 1,
+                            }}
+                          >
+                            <IconCalendar size={18} color={color === "cyan" ? "var(--cyan)" : "var(--magenta)"} />
+                          </div>
+                          <div
+                            className="flex-1 rounded-xl p-5 flex items-center justify-between gap-4"
+                            style={{
+                              backgroundColor: color === "cyan" ? "rgba(0,212,212,0.05)" : "rgba(255,45,155,0.05)",
+                              border: `1px solid ${color === "cyan" ? "rgba(0,212,212,0.15)" : "rgba(255,45,155,0.15)"}`,
+                            }}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="sm:hidden">
+                                <IconCalendar size={18} color={color === "cyan" ? "var(--cyan)" : "var(--magenta)"} />
+                              </div>
+                              <h4 className="font-semibold text-sm" style={{ color: color === "cyan" ? "var(--cyan)" : "var(--magenta)" }}>
+                                {p.title}
+                              </h4>
+                            </div>
+                            <span
+                              className="text-xs px-3 py-1 rounded-full font-medium capitalize shrink-0"
+                              style={{
+                                backgroundColor: color === "cyan" ? "rgba(0,212,212,0.12)" : "rgba(255,45,155,0.12)",
+                                color: color === "cyan" ? "var(--cyan)" : "var(--magenta)",
+                              }}
+                            >
+                              {dateLabel}
+                            </span>
+                          </div>
+                        </div>
+                      </Reveal>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </section>
         )}
 
