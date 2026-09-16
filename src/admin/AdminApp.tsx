@@ -4,7 +4,7 @@ import "./admin.css";
 
 const TOKEN_KEY = "catedra_admin_token";
 
-type FieldType = "text" | "textarea" | "select";
+type FieldType = "text" | "textarea" | "select" | "date";
 type FieldConfig = {
   key: string;
   label: string;
@@ -42,6 +42,10 @@ const COLLECTION_FIELDS: Record<string, FieldConfig[]> = {
     },
     { key: "icon", label: "Ícono", type: "select", options: ICON_OPTIONS },
   ],
+  parciales: [
+    { key: "title", label: "Título del parcial", type: "text" },
+    { key: "date", label: "Fecha", type: "date" },
+  ],
 };
 
 const TABS: { key: string; label: string }[] = [
@@ -49,6 +53,7 @@ const TABS: { key: string; label: string }[] = [
   { key: "auxiliares", label: "Auxiliares" },
   { key: "links", label: "Links" },
   { key: "timeline", label: "Proyectos (línea de tiempo)" },
+  { key: "parciales", label: "Parciales" },
 ];
 
 function emptyDraft(fields: FieldConfig[]): Record<string, string> {
@@ -216,6 +221,9 @@ function CollectionEditor({
         </select>
       );
     }
+    if (f.type === "date") {
+      return <input className="admin-input" type="date" value={value} onChange={(e) => onChange(e.target.value)} />;
+    }
     return <input className="admin-input" value={value} onChange={(e) => onChange(e.target.value)} />;
   };
 
@@ -350,6 +358,7 @@ type Content = {
   auxiliares: Item[];
   links: Item[];
   timeline: Item[];
+  parciales: Item[];
 };
 
 export default function AdminApp() {
