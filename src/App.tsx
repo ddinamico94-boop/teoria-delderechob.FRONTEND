@@ -15,6 +15,13 @@ const IconScale = ({ size = 24, color = "currentColor" }) => (
   </svg>
 );
 
+const IconSearch = ({ size = 24, color = "currentColor" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="11" cy="11" r="7" />
+    <line x1="16.5" y1="16.5" x2="22" y2="22" />
+  </svg>
+);
+
 const IconBook = ({ size = 24, color = "currentColor" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
@@ -175,9 +182,10 @@ function Reveal({
 }
 
 // ── Mapeo de íconos que vienen del backend como string ──────────────────────
+// Sincronizado con las claves de ICON_OPTIONS en src/icons.tsx (backend).
 
 const ICON_MAP: Record<string, (props: { size?: number; color?: string }) => JSX.Element> = {
-  graduado: IconGraduate,
+  graduate: IconGraduate,
   book: IconBook,
   doc: IconDoc,
   monitor: IconMonitor,
@@ -188,6 +196,9 @@ const ICON_MAP: Record<string, (props: { size?: number; color?: string }) => JSX
   bulb: IconBulb,
   leaf: IconLeaf,
   building: IconBuilding,
+  scale: IconScale,
+  search: IconSearch,
+  handshake: IconHandshake,
 };
 
 type ContentData = {
